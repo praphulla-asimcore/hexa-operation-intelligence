@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f8ff;
+  --foreground: #0a0a0f;
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ----------------------------------------------------------------------------
+   Ambient background — floating blurred orbs
+   ------------------------------------------------------------------------- */
+@keyframes orb-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, -30px, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.orb-1 {
+  width: 560px;
+  height: 560px;
+  top: -120px;
+  left: -120px;
+  background: radial-gradient(circle, rgba(139, 24, 232, 0.1), transparent 70%);
+  animation: orb-drift 12s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 420px;
+  height: 420px;
+  top: 38%;
+  right: -100px;
+  background: radial-gradient(circle, rgba(224, 16, 200, 0.08), transparent 70%);
+  animation: orb-drift 16s ease-in-out infinite reverse;
+}
+
+.orb-3 {
+  width: 500px;
+  height: 280px;
+  bottom: -80px;
+  left: 6%;
+  background: radial-gradient(circle, rgba(23, 184, 165, 0.07), transparent 70%);
+  animation: orb-drift 20s ease-in-out infinite;
+}
+
+/* ----------------------------------------------------------------------------
+   Decorative counter-rotating hexagon ring (hero)
+   ------------------------------------------------------------------------- */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-slow-rev {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.spin-slow {
+  transform-origin: center;
+  animation: spin-slow 20s linear infinite;
+}
+
+.spin-slow-rev {
+  transform-origin: center;
+  animation: spin-slow-rev 28s linear infinite;
+}
+
+/* ----------------------------------------------------------------------------
+   App card entrance + sheen sweep
+   ------------------------------------------------------------------------- */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-in {
+  opacity: 0;
+  animation: card-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Diagonal white sheen that sweeps across the card on hover */
+.card-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.0) 60%
+  );
+  background-size: 250% 250%;
+  background-position: 150% 150%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.group:hover .card-sheen {
+  opacity: 1;
+  animation: card-sheen-sweep 0.9s ease forwards;
+}
+
+@keyframes card-sheen-sweep {
+  from {
+    background-position: 150% 150%;
+  }
+  to {
+    background-position: -50% -50%;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .orb-1,
+  .orb-2,
+  .orb-3,
+  .spin-slow,
+  .spin-slow-rev,
+  .card-in,
+  .group:hover .card-sheen {
+    animation: none;
+  }
+  .card-in {
+    opacity: 1;
+  }
+}
