@@ -27,7 +27,7 @@ export function Hero({ firstName }: { firstName: string }) {
         {/* Blurred bloom layer behind */}
         <h1
           aria-hidden
-          className="pointer-events-none absolute inset-0 select-none text-6xl font-black leading-[0.95] tracking-tight sm:text-8xl"
+          className="pointer-events-none absolute inset-0 select-none text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl"
           style={{
             filter: "blur(28px)",
             opacity: 0.3,
@@ -42,7 +42,7 @@ export function Hero({ firstName }: { firstName: string }) {
 
         {/* Crisp foreground title */}
         <h1
-          className="relative text-6xl font-black leading-[0.95] tracking-tight sm:text-8xl"
+          className="relative text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl"
           style={{
             background: "linear-gradient(160deg, #0a0a0f, #2d2040, #1a1a60)",
             WebkitBackgroundClip: "text",

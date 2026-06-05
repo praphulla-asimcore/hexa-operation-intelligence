@@ -1,22 +1,30 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { AppSection } from "@/components/AppSection";
 import { APP_SECTIONS } from "@/lib/apps";
-import { CURRENT_USER, firstName } from "@/lib/user";
+import { firstName } from "@/lib/user";
 
-export default function DashboardPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/signin");
+
   const year = new Date().getFullYear();
+  const name = session.user.name ?? "";
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-canvas text-ink">
       <AmbientBackground />
 
       <div className="relative z-10 flex flex-1 flex-col">
-        <Nav user={CURRENT_USER} />
+        <Nav user={{ name, role: session.user.role }} />
 
         <main className="flex-1">
-          <Hero firstName={firstName(CURRENT_USER.name)} />
+          <Hero firstName={firstName(name)} />
 
           <div className="flex flex-col gap-16 pb-24">
             {APP_SECTIONS.map((section) => (

@@ -66,6 +66,22 @@ export function AppIcon({ name, className }: AppIconProps) {
           <path d="M12 8.5 13.4 11l2.6 1-2.6 1L12 15.5 10.6 13 8 12l2.6-1z" />
         </svg>
       );
+    case "talent":
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="8" r="3" />
+          <path d="M4 20a5 5 0 0 1 10 0" />
+          <path d="M16 7h5M18.5 4.5v5" />
+        </svg>
+      );
+    case "brain":
+      return (
+        <svg {...common}>
+          <path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5.5A2.5 2.5 0 0 0 6 17a3 3 0 0 0 3 3z" />
+          <path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5.5A2.5 2.5 0 0 1 18 17a3 3 0 0 1-3 3z" />
+          <path d="M12 4.5v15" />
+        </svg>
+      );
     default:
       return null;
   }

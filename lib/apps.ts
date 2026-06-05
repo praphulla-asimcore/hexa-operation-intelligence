@@ -29,7 +29,9 @@ export type AppIconName =
   | "workflow"
   | "insight"
   | "shield"
-  | "spark";
+  | "spark"
+  | "talent"
+  | "brain";
 
 /**
  * Placeholder operations apps. Swap these out for the real entries later —
@@ -120,6 +122,36 @@ export const APP_SECTIONS: AppSectionData[] = [
         accentFrom: "#8B18E8",
         accentTo: "#E010C8",
         icon: "spark",
+      },
+    ],
+  },
+  {
+    id: "talent-hiring",
+    label: "Talent & Hiring",
+    apps: [
+      {
+        id: "hexaats",
+        name: "HexaATS",
+        tagline: "Applicant tracking, simplified",
+        description:
+          "Track every candidate from application to offer. Pipelines, scorecards, and collaborative hiring in one place.",
+        features: ["Pipelines", "Scorecards", "Collaboration"],
+        status: "soon",
+        accentFrom: "#E010C8",
+        accentTo: "#8B18E8",
+        icon: "talent",
+      },
+      {
+        id: "hexaiq",
+        name: "HexaIQ",
+        tagline: "IQ testing for candidates",
+        description:
+          "Run standardized aptitude and IQ assessments for candidates, with automatic scoring and benchmarked results.",
+        features: ["Aptitude tests", "Auto-scoring", "Benchmarks"],
+        status: "soon",
+        accentFrom: "#2020EE",
+        accentTo: "#17B8A5",
+        icon: "brain",
       },
     ],
   },
