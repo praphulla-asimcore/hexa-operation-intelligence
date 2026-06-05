@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import type { Role } from "@prisma/client";
 
 /** Resolve the public base URL used to build invitation links. */
@@ -11,6 +11,27 @@ export function getBaseUrl(): string {
   return "http://localhost:3000";
 }
 
+/** Build an SMTP transport from env (e.g. Google Workspace / Gmail). */
+function getTransport() {
+  const host = process.env.SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT ?? 465);
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !user || !pass) {
+    throw new Error(
+      "SMTP is not configured (set SMTP_HOST, SMTP_USER, SMTP_PASS).",
+    );
+  }
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465, // true for 465 (SSL), false for 587 (STARTTLS)
+    auth: { user, pass },
+  });
+}
+
 interface InvitationEmailOptions {
   to: string;
   role: Role;
@@ -19,7 +40,7 @@ interface InvitationEmailOptions {
 }
 
 /**
- * Sends the invitation email via Resend. The link carries a single-use token
+ * Sends the invitation email over SMTP. The link carries a single-use token
  * that the invitee exchanges for an account on the accept-invite page.
  */
 export async function sendInvitationEmail({
@@ -28,20 +49,15 @@ export async function sendInvitationEmail({
   token,
   invitedByName,
 }: InvitationEmailOptions): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    throw new Error("RESEND_API_KEY is not configured");
-  }
-
-  const from =
-    process.env.EMAIL_FROM ??
-    "Hexa Operation Intelligence <onboarding@resend.dev>";
+  const transporter = getTransport();
+  // From must be an address the SMTP account is allowed to send as; default to
+  // the authenticated user. Optionally include a display name via EMAIL_FROM.
+  const from = process.env.EMAIL_FROM ?? process.env.SMTP_USER!;
   const link = `${getBaseUrl()}/accept-invite?token=${encodeURIComponent(token)}`;
   const roleLabel = role === "ADMIN" ? "Administrator" : "Member";
   const inviter = invitedByName ? `${invitedByName} has` : "You have been";
 
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
+  await transporter.sendMail({
     from,
     to,
     subject: "You're invited to Hexa Operation Intelligence",
@@ -83,8 +99,4 @@ export async function sendInvitationEmail({
   </body>
 </html>`,
   });
-
-  if (error) {
-    throw new Error(error.message ?? "Failed to send invitation email");
-  }
 }
